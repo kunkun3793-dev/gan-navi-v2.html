@@ -108,6 +108,29 @@ body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;col
 .rc-result2{border-radius:8px;padding:12px;margin-top:10px;font-size:13px;line-height:1.7;display:none}
 .rc-btn{margin-top:10px;width:100%;padding:10px;background:#7fbdba;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif}
 
+/* チェック表チェックボックス */
+.chk-table{margin-top:8px;display:flex;flex-direction:column;gap:8px;}
+.chk-row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#fff;border-radius:10px;border:2px solid #ddd;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
+.chk-row.checked{background:#edf8f7;border-color:#7fbdba;}
+.chk-box{width:26px;height:26px;border-radius:5px;border:2px solid #bbb;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;font-size:16px;line-height:1;}
+.chk-row.checked .chk-box{background:#7fbdba;border-color:#5a9e9b;}
+.chk-mark{color:transparent;font-weight:bold;font-size:16px;}
+.chk-row.checked .chk-mark{color:#fff;}
+.chk-label{font-size:13px;color:#333;line-height:1.7;flex:1;}
+.chk-row.checked .chk-label{color:#1a5c5a;font-weight:500;}
+.chk-note{font-size:12px;color:#666;margin-top:10px;padding:10px 12px;background:#fff8e1;border-radius:8px;border-left:4px solid #ffc107;}
+
+/* 選択ボタン */
+.sel-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.sel-btn{background:#f5f5f5;border:2px solid #ddd;border-radius:20px;padding:7px 14px;font-size:13px;color:#555;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;transition:background 0.15s,border-color 0.15s,color 0.15s;user-select:none;}
+.sel-btn.on{background:#7fbdba;border-color:#5a9e9b;color:#fff;font-weight:bold;}
+.sel-btn:active{opacity:0.8;}
+.sel-title{font-size:13px;font-weight:bold;color:#000;margin-bottom:6px;margin-top:4px;}
+
+/* チェック表コピーボタン */
+.copy-chk-btn{display:block;width:100%;margin-top:10px;background:#fff;border:1px solid rgba(0,0,0,0.2);border-radius:8px;padding:9px;font-size:13px;color:#333;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;text-align:center;transition:all 0.2s;}
+.copy-chk-btn:active{opacity:0.7;background:#f5f5f5;}
+
 /* こころのチェック */
 .mh-wrap{margin-top:10px}
 .mh-q{background:rgba(255,255,255,0.7);border-radius:8px;padding:10px 12px;margin-bottom:8px}
@@ -211,7 +234,7 @@ steps:{t:'診断から回復まで',sections:[
     {h:'がん相談支援センターに連絡する',b:'<p>全国のがん診療連携拠点病院に設置。治療・お金・仕事、何でも相談できます。完全無料。受診中の病院以外でもOKです。</p>',checks:['最寄りのがん相談支援センターを調べた','電話または来所で相談予約をした','相談したいことをメモにまとめた'],links:[{ic:'🏛️',t:'がん相談支援センターを探す',d:'国立がん研究センター公式',u:'https://hospdb.ganjoho.jp/kyoten/kyotenlist'}]},
     {h:'セカンドオピニオンの検討',b:'<p>担当医に遠慮する必要はありません。別の専門医の意見を聞くことは「診断の精度を上げる行為」です。</p>',checks:['担当医の説明を録音・メモした','セカンドオピニオン外来を調べた','質問リストを作成した'],links:[{ic:'🏛️',t:'セカンドオピニオン外来を探す',d:'国立がん研究センター',u:'https://ganjoho.jp/public/dia_tre/2nd_opinion/index.html'}]},
     {h:'加入している保険を確認する',b:'<p>がん診断確定時に一時金が出る保険があります。診断書は複数枚用意しましょう。</p>',checks:['がん保険・医療保険の証券を探した','担当の募集人（保険代理店）に連絡した','診断書を何枚取得するか確認した'],links:[]},
-    {h:'ペットのいる方へ',b:'<p>治療が始まると、ペットの世話が難しくなる日が必ず来ます。たらい回しになりやすいので、<strong>診断直後から早めに動くことが重要です。</strong></p><p>入院・副作用がひどい日・通院が長い日——誰に頼むか、今すぐ決めておいてください。</p><p><strong>免疫が低下している時は、動物との接触に注意が必要な場合があります。担当医に確認してください。</strong></p>',checks:['ペットの世話を頼める人を確認した（家族・友人・隣人）','副作用がひどい日・入院時の預かり先を決めた（かかりつけ動物病院・ペットシッター）','担当医にペットがいることを伝えた（免疫低下時の注意確認）'],links:[{ic:'🐾',t:'日本動物愛護協会',d:'相談窓口あり',u:'https://jspca.or.jp/'},{ic:'🐾',t:'地域の動物愛護センターを探す',d:'各都道府県の動物愛護センターに相談',u:'https://www.env.go.jp/nature/dobutsu/aigo/center/'}]},
+    {h:'ペットのいる方へ',b:'<p>治療が始まると、ペットの世話が難しくなる日が必ず来ます。たらい回しになりやすいので、<strong>診断直後から早めに動くことが重要です。</strong></p><p>入院・副作用がひどい日・通院が長い日——誰に頼むか、今すぐ決めておいてください。</p><p><strong>免疫が低下している時は、動物との接触に注意が必要な場合があります。担当医に確認してください。</strong></p>',checks:['ペットの世話を頼める人を確認した（家族・友人・隣人）','副作用がひどい日・入院時の預かり先を決めた（かかりつけ動物病院・ペットシッター）','担当医にペットがいることを伝えた（免疫低下時の注意確認）'],links:[{ic:'🐾',t:'日本動物愛護協会',d:'相談窓口あり',u:'https://jspca.or.jp/'}]},
   ]},
   {h:'🔵 治療前準備（2週間以内）',items:[
     {h:'高額療養費制度の手続き',b:'<p>月の医療費が一定額を超えると払い戻しを受けられます。限度額適用認定証を事前に取得すれば窓口支払い自体を抑えられます。</p>',checks:['加入している健康保険の種類を確認した','限度額適用認定証の申請をした','自己負担限度額（所得区分）を確認した'],links:[{ic:'🏛️',t:'高額療養費制度（厚生労働省）',d:'制度詳細・限度額一覧',u:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html'}]},
@@ -242,10 +265,10 @@ appearance:{t:'アピアランスケア',sections:[
     {h:'スキンケアの基本',b:'<ul><li>低刺激・無香料の保湿剤を使う</li><li>紫外線対策を行う（治療中は特に敏感）</li><li>爪の変形・痛みは我慢せず担当医に報告する</li><li>化粧品は皮膚科や看護師に相談してから選ぶ</li></ul>'},
   ]},
   {h:'4. ウィッグ試着前チェック表',items:[
-    {h:'担当者と一緒に選ぶために',b:'<p>選ぶ基準を整理して、担当者に見せられます。</p><div class="chk-list"><div class="chk-item">使用する場面を整理した（仕事・外出・家族の前など）</div><div class="chk-item">優先ポイントを2つに絞った（自然さ・着け心地・蒸れにくさなど）</div><div class="chk-item">生活スタイルを確認した（長時間着用・夏場・子どもと過ごすなど）</div><div class="chk-item">試着時の確認ポイントを把握した（締め付け・ズレ・重さなど）</div><div class="chk-item">助成金があるか確認した</div></div>'},
+    {h:'担当者と一緒に選ぶために（タップでチェック・コピーして持参）',b:`<p>このチェック表を持参して、担当者と一緒に選びましょう。高額なものを勧められる前に、自分の希望を整理しておくことが大切です。</p><div class="chk-table"><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label"><div class="sel-title">１．使用頻度は？（複数可）</div><div class="sel-group"><span class="sel-btn" data-text="毎日" onclick="event.stopPropagation();tglSel(this)">毎日</span><span class="sel-btn" data-text="仕事（6時間以上）" onclick="event.stopPropagation();tglSel(this)">仕事（6時間以上）</span><span class="sel-btn" data-text="仕事（3時間〜）" onclick="event.stopPropagation();tglSel(this)">仕事（3時間〜）</span><span class="sel-btn" data-text="外出時（3時間未満）" onclick="event.stopPropagation();tglSel(this)">外出時（3時間未満）</span><span class="sel-btn" data-text="自宅" onclick="event.stopPropagation();tglSel(this)">自宅</span><span class="sel-btn" data-text="たまに" onclick="event.stopPropagation();tglSel(this)">たまに</span><span class="sel-btn" data-text="その他" onclick="event.stopPropagation();tglSel(this)">その他</span></div></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label"><div class="sel-title">２．優先ポイントは？（複数可）</div><div class="sel-group"><span class="sel-btn" data-text="軽さ" onclick="event.stopPropagation();tglSel(this)">軽さ</span><span class="sel-btn" data-text="自然さ" onclick="event.stopPropagation();tglSel(this)">自然さ</span><span class="sel-btn" data-text="着け心地" onclick="event.stopPropagation();tglSel(this)">着け心地</span><span class="sel-btn" data-text="蒸れにくい" onclick="event.stopPropagation();tglSel(this)">蒸れにくい</span><span class="sel-btn" data-text="その他" onclick="event.stopPropagation();tglSel(this)">その他</span></div></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label"><div class="sel-title">３．生活スタイルは？（複数可）</div><div class="sel-group"><span class="sel-btn" data-text="長時間着用" onclick="event.stopPropagation();tglSel(this)">長時間着用</span><span class="sel-btn" data-text="短時間" onclick="event.stopPropagation();tglSel(this)">短時間</span><span class="sel-btn" data-text="夏場" onclick="event.stopPropagation();tglSel(this)">夏場</span><span class="sel-btn" data-text="子どもと過ごす" onclick="event.stopPropagation();tglSel(this)">子どもと過ごす</span><span class="sel-btn" data-text="その他" onclick="event.stopPropagation();tglSel(this)">その他</span></div></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label"><div class="sel-title">４．試着時の確認ポイントは？（複数可）</div><div class="sel-group"><span class="sel-btn" data-text="締め付け" onclick="event.stopPropagation();tglSel(this)">締め付け</span><span class="sel-btn" data-text="ズレ" onclick="event.stopPropagation();tglSel(this)">ズレ</span><span class="sel-btn" data-text="重さ" onclick="event.stopPropagation();tglSel(this)">重さ</span><span class="sel-btn" data-text="色" onclick="event.stopPropagation();tglSel(this)">色</span><span class="sel-btn" data-text="長さ" onclick="event.stopPropagation();tglSel(this)">長さ</span><span class="sel-btn" data-text="メンテナンス" onclick="event.stopPropagation();tglSel(this)">メンテナンス</span><span class="sel-btn" data-text="その他" onclick="event.stopPropagation();tglSel(this)">その他</span></div></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label"><div class="sel-title">５．価格の希望は？（複数可）</div><div class="sel-group"><span class="sel-btn" data-text="1万円未満" onclick="event.stopPropagation();tglSel(this)">1万円未満</span><span class="sel-btn" data-text="3万円未満" onclick="event.stopPropagation();tglSel(this)">3万円未満</span><span class="sel-btn" data-text="5万円未満" onclick="event.stopPropagation();tglSel(this)">5万円未満</span><span class="sel-btn" data-text="5万円以上〜" onclick="event.stopPropagation();tglSel(this)">5万円以上〜</span><span class="sel-btn" data-text="10万円以上〜" onclick="event.stopPropagation();tglSel(this)">10万円以上〜</span></div></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label">６．助成金の確認ができた</div></div></div><button class="copy-chk-btn" onclick="copyChkList(this,'wig')">このチェック表をコピーする（LINEやメモに貼れます）</button>`},
   ]},
   {h:'5. 乳房補整具 選び方チェック表',items:[
-    {h:'一人で悩まず、担当者と一緒に考えましょう',b:'<p>手術の種類・気になること・生活スタイルを整理して、担当者と一緒に選ぶための表です。</p><div class="chk-list"><div class="chk-item">手術の種類を確認した（部分切除・全切除・わからない）</div><div class="chk-item">気になることを整理した（自然さ・下着のフィット感・温泉・シルエットなど）</div><div class="chk-item">優先ポイントを2つに絞った（自然さ・軽さ・着け心地・費用など）</div><div class="chk-item">生活スタイルを確認した（毎日・仕事・温泉・旅行など）</div><div class="chk-item">自治体の胸部補整具助成金制度を調べた（購入前に！）</div><div class="chk-item">担当者への質問をメモした</div></div>'},
+    {h:'担当者と一緒に選ぶために（タップでチェック・コピーして持参）',b:`<p>このチェック表を持参して、担当者と一緒に選びましょう。購入前に助成金の確認を忘れずに。</p><div class="chk-table"><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label">１．手術の種類に合わせた補整具の説明を聞く</div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label">２．気になることを整理して確認する</div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label"><div class="sel-title">３．優先ポイントは？（複数可）</div><div class="sel-group"><span class="sel-btn" data-text="軽さ" onclick="event.stopPropagation();tglSel(this)">軽さ</span><span class="sel-btn" data-text="重さ" onclick="event.stopPropagation();tglSel(this)">重さ</span><span class="sel-btn" data-text="着け心地" onclick="event.stopPropagation();tglSel(this)">着け心地</span><span class="sel-btn" data-text="蒸れにくい" onclick="event.stopPropagation();tglSel(this)">蒸れにくい</span><span class="sel-btn" data-text="その他" onclick="event.stopPropagation();tglSel(this)">その他</span></div></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label"><div class="sel-title">４．生活スタイルは？</div><div class="sel-group"><span class="sel-btn" data-text="長時間着用" onclick="event.stopPropagation();tglSel(this)">長時間着用</span><span class="sel-btn" data-text="短時間" onclick="event.stopPropagation();tglSel(this)">短時間</span><span class="sel-btn" data-text="夏場" onclick="event.stopPropagation();tglSel(this)">夏場</span><span class="sel-btn" data-text="子どもと過ごす" onclick="event.stopPropagation();tglSel(this)">子どもと過ごす</span><span class="sel-btn" data-text="その他" onclick="event.stopPropagation();tglSel(this)">その他</span></div></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label">５．自治体の胸部補整具助成金制度の説明を受けた<br><small style="color:#c43a08">購入前に必ず確認！</small></div></div><div class="chk-row" onclick="tglChk(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><div class="chk-label">６．乳房補整具の価格を確認できた</div></div></div><div class="chk-note">※補整パッドはズレやすいため、試着時に必ずズレの確認をしてください（特に外出時）</div><button class="copy-chk-btn" onclick="copyChkList(this,'breast')">このチェック表をコピーする（LINEやメモに貼れます）</button>`},
   ]},
   {h:'6. 提携アピアランスケアサロン',items:[
     {h:'準備中',b:'<p>提携アピアランスケアサロンの情報は準備中です。まもなく掲載予定です。</p><p>ご希望の方はLINEからお問い合わせください。</p><a class="lnk" href="https://lin.ee/fPTqi76" target="_blank"><span class="ln">👩‍⚕️ がんライフ・ナビゲーターにLINE相談</span><span class="ld">アピアランスケア専門家として直接アドバイス</span></a>'},
@@ -453,6 +476,76 @@ function cpS(btn){
 }
 
 
+function tglSel(el){
+  if(el.getAttribute('data-on')==='1'){
+    el.setAttribute('data-on','0');
+    el.style.background='#f5f5f5';
+    el.style.border='2px solid #ddd';
+    el.style.color='#555';
+    el.style.fontWeight='normal';
+    el.textContent=el.getAttribute('data-text');
+  } else {
+    el.setAttribute('data-on','1');
+    el.style.background='#7fbdba';
+    el.style.border='2px solid #5a9e9b';
+    el.style.color='#ffffff';
+    el.style.fontWeight='bold';
+    el.textContent='✓ '+el.getAttribute('data-text');
+  }
+}
+function tglChk(el){
+  var box=el.querySelector('.chk-box');
+  var mark=el.querySelector('.chk-mark');
+  var label=el.querySelector('.chk-label');
+  if(el.getAttribute('data-chk')==='1'){
+    el.setAttribute('data-chk','0');
+    el.style.background='#fff';
+    el.style.border='2px solid #ddd';
+    box.style.background='';
+    box.style.border='2px solid #bbb';
+    mark.style.color='transparent';
+    label.style.color='#333';
+    label.style.fontWeight='normal';
+  } else {
+    el.setAttribute('data-chk','1');
+    el.style.background='#edf8f7';
+    el.style.border='2px solid #7fbdba';
+    box.style.background='#7fbdba';
+    box.style.border='2px solid #5a9e9b';
+    mark.style.color='#fff';
+    label.style.color='#1a5c5a';
+    label.style.fontWeight='500';
+  }
+}
+function copyChkList(btn,type){
+  var texts={
+    'wig':'【ウィッグ試着前チェック表】\n１．使用頻度は？（複数可）\n　毎日／仕事（6時間以上）／仕事（3時間〜）／外出時（3時間未満）／自宅／たまに／その他\n２．優先ポイントは？（複数可）\n　軽さ／自然さ／着け心地／蒸れにくい／その他\n３．生活スタイルは？（複数可）\n　長時間着用／短時間／夏場／子どもと過ごす／その他\n４．試着時の確認ポイントは？（複数可）\n　締め付け／ズレ／重さ／色／長さ／メンテナンス／その他\n５．価格の希望は？（複数可）\n　1万円未満／3万円未満／5万円未満／5万円以上〜／10万円以上〜\n６．助成金の確認ができた',
+    'breast':'【乳房補整具 選び方チェック表】\n１．手術の種類に合わせた補整具の説明を聞く\n２．気になることを整理して確認する\n３．優先ポイントは？（複数可）\n　軽さ／重さ／着け心地／蒸れにくい／その他\n４．生活スタイルは？（複数可）\n　長時間着用／短時間／夏場／子どもと過ごす／その他\n５．自治体の胸部補整具助成金制度の説明を受けた（購入前に必ず確認）\n６．乳房補整具の価格を確認できた\n※補整パッドはズレやすいため試着時に必ずズレを確認する（特に外出時）'
+  };
+  var text=texts[type]||'';
+  var el=btn.parentElement.querySelector('.copy-textarea');
+  if(!el){
+    el=document.createElement('textarea');
+    el.className='copy-textarea';
+    el.style.cssText='position:fixed;left:-9999px;top:0;opacity:0;';
+    btn.parentElement.appendChild(el);
+  }
+  el.value=text;
+  el.select();
+  el.setSelectionRange(0,99999);
+  try{
+    document.execCommand('copy');
+    btn.textContent='コピーしました！LINEやメモに貼れます';
+    setTimeout(function(){btn.textContent='このチェック表をコピーする（LINEやメモに貼れます）';},3000);
+  }catch(e){
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(function(){
+        btn.textContent='コピーしました！LINEやメモに貼れます';
+        setTimeout(function(){btn.textContent='このチェック表をコピーする（LINEやメモに貼れます）';},3000);
+      });
+    }
+  }
+}
 var mhAnswers={};
 function selMH(el,q,a){
   mhAnswers[q]=a;
