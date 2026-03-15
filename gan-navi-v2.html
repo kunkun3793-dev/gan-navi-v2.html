@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>がんと診断された日</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#ddd}
+body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;color:#000000}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:#fff;display:flex;flex-direction:column}
+
+/* ヘッダー */
+.header{background:linear-gradient(160deg,#f8f8f8 0%,#ededed 60%,#e2e6e5 100%);padding:28px 20px 24px;position:relative;overflow:hidden;flex-shrink:0}
+.header svg.net{position:absolute;top:0;right:0;width:100%;height:100%;pointer-events:none}
+.hi{position:relative;z-index:1}
+.h-big{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:28px;font-weight:700;color:#000000;letter-spacing:0.05em;display:block;line-height:1.3}
+.h-line{width:55%;height:1px;background:#999999;opacity:0.4;margin:8px 0}
+.h-sub{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:16px;color:#000000;letter-spacing:0.06em;display:block;margin-top:4px}
+
+/* ページエリア */
+.page{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px}
+.gp,.dp{display:none}
+.gp.on,.dp.on{display:block}
+
+/* グリッド */
+.grid{display:grid;grid-template-columns:1fr;gap:12px;padding:20px 16px;height:calc(100vh - 180px)}
+.cb{background:#7fbdba;border:none;border-radius:14px;cursor:pointer;width:100%;height:100%;min-height:72px;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.cb:active{transform:scale(0.98);background:#5fa09d}
+.cb span{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:20px;color:#000000;text-align:center;line-height:1.65;letter-spacing:0.08em;padding:8px}
+
+/* 詳細ページ */
+.bbtn{background:none;border:none;color:#000000;font-size:14px;cursor:pointer;padding:16px 16px 8px;display:flex;align-items:center;gap:4px}
+.bbtn:active{opacity:0.7}
+.dtitle{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:18px;color:#000000;padding:2px 16px 12px;letter-spacing:0.08em}
+
+/* 大項目アコーディオン */
+.al{padding:0 12px;display:flex;flex-direction:column;gap:8px;padding-bottom:12px}
+.ai{background:#7fbdba;border-radius:16px;overflow:hidden}
+.ah{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer}
+.ah span{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:14px;color:#000000;flex:1;letter-spacing:0.05em;line-height:1.4}
+.aico{color:#000000;font-size:22px;transition:transform 0.25s;flex-shrink:0;margin-left:8px;font-style:normal}
+.ai.on .aico{transform:rotate(45deg)}
+.ab{max-height:0;overflow:hidden;transition:max-height 0.35s ease}
+.ai.on .ab{max-height:5000px}
+
+/* 小項目アコーディオン */
+.sl{padding:4px 10px 12px;display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(255,255,255,0.2)}
+.si{background:#f1f1f1;border-radius:12px;overflow:hidden}
+.sh{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer}
+.sh span{font-size:13px;color:#000000;flex:1;letter-spacing:0.04em;line-height:1.4}
+.sico{color:#000000;font-size:18px;transition:transform 0.25s;flex-shrink:0;margin-left:6px;font-style:normal}
+.si.on .sico{transform:rotate(45deg)}
+.sb{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+.si.on .sb{max-height:3000px}
+.sc{padding:4px 16px 14px;font-size:13px;color:#000000;line-height:1.9;border-top:1px solid rgba(0,0,0,0.1)}
+.sc p{margin-top:8px}
+.sc ul{margin-top:8px;padding-left:18px}
+.sc li{margin-bottom:5px}
+.sc strong{color:#000000;font-weight:700}
+
+/* チェックリスト */
+.cl{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.ci{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.7);border:1px solid rgba(0,0,0,0.1);border-radius:8px;cursor:pointer}
+.ci.ck{background:rgba(255,255,255,0.2)}
+.cb2{flex-shrink:0;width:18px;height:18px;border:2px solid #888888;border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all 0.2s}
+.ci.ck .cb2{background:#7fbdba;border-color:#7fbdba;color:#fff}
+.ci.ck .cb2::after{content:'✓';font-size:12px;font-weight:700;color:#fff}
+.ci-t{flex:1;font-size:13px;color:#000000;line-height:1.4}
+.ci-s{font-size:11px;color:#444444;margin-top:2px}
+.ci.ck .ci-t{text-decoration:line-through;opacity:0.7}
+
+/* リンクボタン */
+.lk-wrap{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.lk{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.15);cursor:pointer;text-decoration:none;transition:all 0.2s}
+.lk:active{opacity:0.8}
+.lk .li{font-size:16px;flex-shrink:0}
+.lk .lbd{flex:1}
+.lk .lt2{font-size:12px;font-weight:700;color:#000000}
+.lk .ld{font-size:10px;color:#333333;margin-top:1px}
+.lk-line{background:rgba(6,199,85,0.25);border-color:rgba(6,199,85,0.5)}
+
+/* フェーズバッジ */
+.phase-badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;margin-bottom:6px}
+.ph0{background:rgba(196,58,8,0.3);color:#ffbba0}
+.ph1{background:rgba(26,95,191,0.3);color:#b0d0ff}
+.ph2{background:rgba(184,92,0,0.3);color:#ffd5a0}
+.ph3{background:rgba(26,122,90,0.3);color:#a0f0cc}
+
+/* 相談窓口カード */
+.src-card{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.src-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.src-desc{font-size:12px;color:rgba(255,255,255,0.8);line-height:1.6;margin-bottom:8px}
+.src-link{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(255,255,255,0.2);color:#fff;text-decoration:none;cursor:pointer}
+
+/* 復帰・回復チェック */
+.rc-wrap{margin-top:10px;background:rgba(255,255,255,0.7);border-radius:8px;padding:12px}
+.rc-title{font-size:13px;font-weight:700;color:#000;margin-bottom:4px}
+.rc-note{font-size:11px;color:#555;margin-bottom:10px}
+.rc-q2{background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.rc-q2-text{font-size:13px;font-weight:600;margin-bottom:7px;line-height:1.4;color:#000}
+.rc-axis{display:inline-block;font-size:10px;background:#7fbdba;color:#fff;padding:1px 6px;border-radius:4px;font-weight:700;margin-right:4px}
+.rc-opts2{display:flex;gap:6px}
+.rc-o2{flex:1;padding:6px 4px;border:1.5px solid #ccc;border-radius:7px;background:#fff;font-size:12px;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;transition:all 0.2s;text-align:center;color:#000}
+.rc-o2.yes.sel{background:#e8f8f0;border-color:#7fbdba;color:#1a7a5a;font-weight:700}
+.rc-o2.maybe.sel{background:#fff8e8;border-color:#b85c00;color:#b85c00;font-weight:700}
+.rc-o2.no.sel{background:#fff0f0;border-color:#c43a08;color:#c43a08;font-weight:700}
+.rc-result2{border-radius:8px;padding:12px;margin-top:10px;font-size:13px;line-height:1.7;display:none}
+.rc-btn{margin-top:10px;width:100%;padding:10px;background:#7fbdba;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif}
+
+/* こころのチェック */
+.mh-wrap{margin-top:10px}
+.mh-q{background:rgba(255,255,255,0.7);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.mh-qt{font-size:13px;font-weight:700;margin-bottom:8px;line-height:1.5;color:#000}
+.mh-opts{display:flex;gap:6px;flex-wrap:wrap}
+.mh-o{padding:6px 10px;border:1.5px solid #aaa;border-radius:20px;background:#fff;font-size:12px;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;transition:all 0.2s;color:#000}
+.mh-o.sel{background:#7fbdba;border-color:#7fbdba;color:#fff;font-weight:700}
+
+/* 免責 */
+.disclaimer{padding:14px 16px 4px;border-top:1px solid #e8e8e8;background:#f9f9f9}
+.disclaimer p{font-size:11px;color:#000000;line-height:1.7;margin-bottom:6px}
+.disclaimer a{color:#000000;text-decoration:none}
+
+/* ナビバー */
+.navbar{background:linear-gradient(160deg,#f0f0f0 0%,#e8e8e8 100%);border-top:1px solid #ddd;height:68px;display:flex;align-items:center;justify-content:space-around;flex-shrink:0}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 24px;flex:1;text-decoration:none}
+.ni:active{opacity:0.7}
+.nl{font-size:11px;color:#000000;letter-spacing:0.06em;font-weight:500}
+.nd{width:1px;height:26px;background:rgba(0,0,0,0.12);flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ヘッダー -->
+<div class="header">
+  <svg class="net" viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMid slice">
+    <circle cx="220" cy="60" r="85" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+    <circle cx="220" cy="60" r="62" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+    <circle cx="220" cy="60" r="40" fill="none" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
+    <circle cx="245" cy="10" r="2.5" fill="rgba(127,189,186,0.8)"/>
+    <circle cx="292" cy="42" r="2" fill="rgba(127,189,186,0.7)"/>
+    <circle cx="278" cy="100" r="2.5" fill="rgba(127,189,186,0.75)"/>
+    <circle cx="185" cy="112" r="2" fill="rgba(127,189,186,0.6)"/>
+    <line x1="245" y1="10" x2="292" y2="42" stroke="rgba(127,189,186,0.5)" stroke-width="0.8"/>
+    <line x1="292" y1="42" x2="278" y2="100" stroke="rgba(127,189,186,0.4)" stroke-width="0.8"/>
+    <line x1="278" y1="100" x2="185" y2="112" stroke="rgba(127,189,186,0.35)" stroke-width="0.8"/>
+    <line x1="245" y1="10" x2="185" y2="112" stroke="rgba(127,189,186,0.25)" stroke-width="0.6"/>
+  </svg>
+  <div class="hi">
+    <span class="h-big">がんと診断された日</span>
+    <div class="h-line"></div>
+    <span class="h-sub">何から始めればいいか、一緒に整理します</span>
+  </div>
+</div>
+
+<!-- ページエリア -->
+<div class="page" id="pa">
+  <!-- トップ：グリッド -->
+  <div class="gp on" id="gp">
+    <div class="grid">
+      <button class="cb" onclick="show('steps')"><span>まず、ここから</span></button>
+      <button class="cb" onclick="show('appearance')"><span>アピアランスケア</span></button>
+      <button class="cb" onclick="show('support')"><span>申請・ダウンロード一覧</span></button>
+      <button class="cb" onclick="show('tell')"><span>大切な人への伝え方</span></button>
+    </div>
+  </div>
+
+  <!-- 詳細：アコーディオン -->
+  <div class="dp" id="dp">
+    <button class="bbtn" onclick="back()">← カテゴリーに戻る</button>
+    <div class="dtitle" id="dtitle"></div>
+    <div class="al" id="al"></div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <p>本サービスの情報は参考情報であり、医療的判断の代替となるものではありません。治療や医療に関するご判断は、必ず主治医にご相談ください。</p>
+  <p>参考：<a href="https://ganjoho.jp" target="_blank">国立がん研究センター がん情報サービス</a></p>
+</div>
+
+<!-- ナビバー -->
+<div class="navbar">
+  <div class="ni" onclick="back()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><circle cx="12" cy="7.5" r="1.2" fill="#000000" stroke="none"/></svg>
+    <span class="nl">ホーム</span>
+  </div>
+  <div class="nd"></div>
+  <div class="ni" onclick="window.open('https://lin.ee/MVh1USV','_blank')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" fill="#00b900"/><path d="M12 5.5C8.4 5.5 5.5 8 5.5 11c0 1.8 1 3.4 2.6 4.5l-.6 2.2 2.5-1.3c.6.2 1.3.3 2 .3 3.6 0 6.5-2.5 6.5-5.7s-2.9-5.5-6.5-5.5z" fill="white"/></svg>
+    <span class="nl">LINE</span>
+  </div>
+  <div class="nd"></div>
+  <div class="ni" onclick="window.open('https://note.com/kunkun935','_blank')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <span class="nl">コラム</span>
+  </div>
+</div>
+</div>
+
+<script>
+var LS='gan_checked_v4';
+function loadChecked(){try{return JSON.parse(localStorage.getItem(LS)||'{}')}catch{return{}}}
+var checked=loadChecked();
+function saveCheck(k,v){checked[k]=v;try{localStorage.setItem(LS,JSON.stringify(checked))}catch{}}
+
+var D={
+steps:{t:'診断から回復まで',sections:[
+  {h:'🔴 診断直後（〜24時間）',items:[
+    {h:'まず「一人で抱え込まない」と決める',b:'<p>診断を受けた直後は誰でも頭が真っ白になります。今日は何も決めなくていい。まず信頼できる人に連絡することだけを考えてください。</p>',checks:['信頼できる家族・友人に連絡した','次の受診日を確認した','「今日は休む」と決めた'],links:[]},
+    {h:'がん相談支援センターに連絡する',b:'<p>全国のがん診療連携拠点病院に設置。治療・お金・仕事、何でも相談できます。完全無料。受診中の病院以外でもOKです。</p>',checks:['最寄りのがん相談支援センターを調べた','電話または来所で相談予約をした','相談したいことをメモにまとめた'],links:[{ic:'🏛️',t:'がん相談支援センターを探す',d:'国立がん研究センター公式',u:'https://hospdb.ganjoho.jp/kyoten/kyotenlist'}]},
+    {h:'セカンドオピニオンの検討',b:'<p>担当医に遠慮する必要はありません。別の専門医の意見を聞くことは「診断の精度を上げる行為」です。</p>',checks:['担当医の説明を録音・メモした','セカンドオピニオン外来を調べた','質問リストを作成した'],links:[{ic:'🏛️',t:'セカンドオピニオン外来を探す',d:'国立がん研究センター',u:'https://ganjoho.jp/public/dia_tre/2nd_opinion/index.html'}]},
+    {h:'加入している保険を確認する',b:'<p>がん診断確定時に一時金が出る保険があります。診断書は複数枚用意しましょう。</p>',checks:['がん保険・医療保険の証券を探した','担当の募集人（保険代理店）に連絡した','診断書を何枚取得するか確認した'],links:[]},
+    {h:'ペットのいる方へ',b:'<p>治療が始まると、ペットの世話が難しくなる日が必ず来ます。たらい回しになりやすいので、<strong>診断直後から早めに動くことが重要です。</strong></p><p>入院・副作用がひどい日・通院が長い日——誰に頼むか、今すぐ決めておいてください。</p><p><strong>免疫が低下している時は、動物との接触に注意が必要な場合があります。担当医に確認してください。</strong></p>',checks:['ペットの世話を頼める人を確認した（家族・友人・隣人）','副作用がひどい日・入院時の預かり先を決めた（かかりつけ動物病院・ペットシッター）','担当医にペットがいることを伝えた（免疫低下時の注意確認）'],links:[{ic:'🐾',t:'日本動物愛護協会',d:'相談窓口あり',u:'https://jspca.or.jp/'},{ic:'🐾',t:'地域の動物愛護センターを探す',d:'各都道府県の動物愛護センターに相談',u:'https://www.env.go.jp/nature/dobutsu/aigo/center/'}]},
+  ]},
+  {h:'🔵 治療前準備（2週間以内）',items:[
+    {h:'高額療養費制度の手続き',b:'<p>月の医療費が一定額を超えると払い戻しを受けられます。限度額適用認定証を事前に取得すれば窓口支払い自体を抑えられます。</p>',checks:['加入している健康保険の種類を確認した','限度額適用認定証の申請をした','自己負担限度額（所得区分）を確認した'],links:[{ic:'🏛️',t:'高額療養費制度（厚生労働省）',d:'制度詳細・限度額一覧',u:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html'}]},
+    {h:'職場への報告と就労継続の検討',b:'<p>「治療しながら働く」ことは今や一般的です。いきなり退職しないでください。休職制度・傷病手当金の活用を確認しましょう。</p>',checks:['直属の上司または人事に状況を報告した','就業規則で休職制度を確認した','社会保険労務士への相談を検討した'],links:[]},
+    {h:'傷病手当金の申請準備',b:'<p>会社員・公務員が対象。連続4日以上休業で、給与の約2/3が最長1年6ヶ月支給されます。</p>',checks:['対象かどうか確認した（社保加入者が対象）','申請書類を健保組合から取り寄せた','支給期間・金額の目安を計算した'],links:[{ic:'🏛️',t:'傷病手当金（協会けんぽ）',d:'申請書ダウンロードも可',u:'https://www.kyoukaikenpo.or.jp/g3/cat315/sb3040/r139/'}]},
+    {h:'訪問看護・在宅サービスの申請',b:'<p>「まだ大丈夫」と思っていても、副作用はいつ出るかわかりません。<strong>「必要ですか？」ではなく「申請したいので指示書をお願いします」と伝えることが重要です。</strong></p>',checks:['主治医に「訪問看護の指示書をお願いします」と伝えた','訪問看護ステーションに連絡した'],links:[{ic:'🏛️',t:'訪問看護ステーション検索',d:'公益財団法人日本訪問看護財団',u:'https://www.jvnf.or.jp/home/station-search'}]},
+
+  ]},
+  {h:'🟠 治療中',items:[
+    {h:'こころの状態を確認する',b:'<p>治療中の不安・抑うつは非常によくあることです。患者自身は「落ちていること」に気づきにくいため、定期的な確認が重要です。</p><div class="mh-wrap"><div class="mh-q"><div class="mh-qt">Q1. この2週間、気分が落ち込んだり、希望が持てないと感じることがありましたか？</div><div class="mh-opts"><button class="mh-o" onclick="selMH(this,0,0)">まったくない</button><button class="mh-o" onclick="selMH(this,0,1)">数日間</button><button class="mh-o" onclick="selMH(this,0,2)">半分以上</button><button class="mh-o" onclick="selMH(this,0,3)">ほぼ毎日</button></div></div><div class="mh-q"><div class="mh-qt">Q2. 物事に対してほとんど興味・関心がなくなっていると感じましたか？</div><div class="mh-opts"><button class="mh-o" onclick="selMH(this,1,0)">感じない</button><button class="mh-o" onclick="selMH(this,1,1)">少し感じる</button><button class="mh-o" onclick="selMH(this,1,2)">かなり感じる</button><button class="mh-o" onclick="selMH(this,1,3)">ほぼ毎日</button></div></div><div class="mh-q"><div class="mh-qt">Q3. 治療のことを考えると、強い不安や恐怖を感じますか？</div><div class="mh-opts"><button class="mh-o" onclick="selMH(this,2,0)">感じない</button><button class="mh-o" onclick="selMH(this,2,1)">少し感じる</button><button class="mh-o" onclick="selMH(this,2,2)">かなり感じる</button><button class="mh-o" onclick="selMH(this,2,3)">毎日感じる</button></div></div><div class="mh-q"><div class="mh-qt">Q4. 夜、眠れない・何度も目が覚めることがありますか？</div><div class="mh-opts"><button class="mh-o" onclick="selMH(this,3,0)">ない</button><button class="mh-o" onclick="selMH(this,3,1)">週に1〜2回</button><button class="mh-o" onclick="selMH(this,3,2)">ほぼ毎日</button><button class="mh-o" onclick="selMH(this,3,3)">毎日かなりつらい</button></div></div><div class="mh-q"><div class="mh-qt">Q5. 誰かに気持ちを打ち明けられていますか？</div><div class="mh-opts"><button class="mh-o" onclick="selMH(this,4,0)">できている</button><button class="mh-o" onclick="selMH(this,4,1)">あまりできていない</button><button class="mh-o" onclick="selMH(this,4,2)">ほとんどできていない</button><button class="mh-o" onclick="selMH(this,4,3)">誰にも話せていない</button></div></div><div id="mh-result" style="display:none;margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.7"></div></div>',checks:[],links:[]},
+  ]},
+  {h:'🟢 治療後・回復期',items:[
+    {h:'就労復帰・社会復帰の準備',b:'<p>医師が「復帰できる」と判断しても、心理的な回復は追いついていないことが多いです。</p>',checks:['主治医から就労許可の見通しを聞いた（体だけでなく心の状態も伝える）','副作用が落ち着いてきた','1日の活動で極端な疲労がなくなってきた','職場のことを考えても強い不安を感じない','産業保健スタッフ・人事と段階的復帰プランを話し合った'],links:[]},
+    {h:'心と体の回復を確認する',b:'<p>治療後も変化は続きます。体・心・生活・仕事の4つの視点で今の状態を確認してみましょう。</p>',checks:['体力が少しずつ戻ってきた','副作用の症状が軽くなってきた','以前と比べて気分が落ち着いてきた','好きなことを楽しめる日が増えてきた','日常生活が概ね自分でできるようになってきた','医療費の領収書を保管している（確定申告の医療費控除に使えます）'],links:[]},
+  ]},
+]},
+appearance:{t:'アピアランスケア',sections:[
+  {h:'1. アピアランスケアとは',items:[
+    {h:'美容ではなく、生活を守る支援です',b:'<p>アピアランスケアとは、がん治療による外見の変化（脱毛・爪・肌・体型変化など）に対応する医療的ケアのことです。</p><p>美容ではなく、<strong>生活の質を維持するための支援</strong>として位置づけられています。</p><p>「そういうケアがある」と知らずに一人で悩んでいる方が多いのが現状です。</p>'},
+    {h:'担当医への聞き方',b:'<p>「アピアランスケアについて相談できる場所はありますか？」と一言聞いてみてください。</p><p>全国のがん診療連携拠点病院の多くに「アピアランスケア外来」や相談室があります。</p><a class="lnk" href="https://ganjoho.jp/public/support/appearance/index.html" target="_blank"><span class="ln">🏥 アピアランスケア外来（国立がん研究センター）</span><span class="ld">外見の変化に対応する専門外来</span></a>'},
+  ]},
+  {h:'2. ウィッグ',items:[
+    {h:'いつ頃から準備すればいい？',b:'<p><strong>抗がん剤治療が決まったら、できるだけ早く、理想は投与開始前に準備を始めること</strong>をお勧めします。</p><p>脱毛は多くの場合、投与開始から2〜4週間前後で始まります。脱毛前に自分の髪型・色を確認してウィッグを選ぶ方が合わせやすいです。</p>'},
+    {h:'助成金制度について',b:'<p><strong>全国400以上の自治体が独自の助成金制度を設けています。</strong></p><p>重要な注意点：<br>・<strong>購入前</strong>に申請が必要な自治体があります<br>・ウィッグと胸部補整具は別々に申請できる自治体が多い<br>・領収書の保管が必要</p>',checks:['お住まいの自治体の助成金制度を調べた（購入前に！）','「医療用ウィッグ」と明記された領収書を保管している'],links:[{ic:'📋',t:'ウィッグ助成金 自治体一覧（JHD&C）',d:'購入前に必ずご確認を',u:'https://www.jhdac.org/local_goverment/'}]},
+  ]},
+  {h:'3. 肌・爪のケア',items:[
+    {h:'治療による肌・爪の変化',b:'<p>抗がん剤・放射線治療などにより、肌荒れ・乾燥・爪の変形・色素沈着などが起きることがあります。</p><p>担当医や看護師に遠慮せず伝えてください。外来で対処法を教えてもらえることがあります。</p>'},
+    {h:'スキンケアの基本',b:'<ul><li>低刺激・無香料の保湿剤を使う</li><li>紫外線対策を行う（治療中は特に敏感）</li><li>爪の変形・痛みは我慢せず担当医に報告する</li><li>化粧品は皮膚科や看護師に相談してから選ぶ</li></ul>'},
+  ]},
+  {h:'4. ウィッグ試着前チェック表',items:[
+    {h:'担当者と一緒に選ぶために',b:'<p>選ぶ基準を整理して、担当者に見せられます。</p><div class="chk-list"><div class="chk-item">使用する場面を整理した（仕事・外出・家族の前など）</div><div class="chk-item">優先ポイントを2つに絞った（自然さ・着け心地・蒸れにくさなど）</div><div class="chk-item">生活スタイルを確認した（長時間着用・夏場・子どもと過ごすなど）</div><div class="chk-item">試着時の確認ポイントを把握した（締め付け・ズレ・重さなど）</div><div class="chk-item">助成金があるか確認した</div></div>'},
+  ]},
+  {h:'5. 乳房補整具 選び方チェック表',items:[
+    {h:'一人で悩まず、担当者と一緒に考えましょう',b:'<p>手術の種類・気になること・生活スタイルを整理して、担当者と一緒に選ぶための表です。</p><div class="chk-list"><div class="chk-item">手術の種類を確認した（部分切除・全切除・わからない）</div><div class="chk-item">気になることを整理した（自然さ・下着のフィット感・温泉・シルエットなど）</div><div class="chk-item">優先ポイントを2つに絞った（自然さ・軽さ・着け心地・費用など）</div><div class="chk-item">生活スタイルを確認した（毎日・仕事・温泉・旅行など）</div><div class="chk-item">自治体の胸部補整具助成金制度を調べた（購入前に！）</div><div class="chk-item">担当者への質問をメモした</div></div>'},
+  ]},
+  {h:'6. 提携アピアランスケアサロン',items:[
+    {h:'準備中',b:'<p>提携アピアランスケアサロンの情報は準備中です。まもなく掲載予定です。</p><p>ご希望の方はLINEからお問い合わせください。</p><a class="lnk" href="https://lin.ee/fPTqi76" target="_blank"><span class="ln">👩‍⚕️ がんライフ・ナビゲーターにLINE相談</span><span class="ld">アピアランスケア専門家として直接アドバイス</span></a>'},
+  ]},
+]},
+
+mental:{t:'こころの状態チェック',sections:[
+  {h:'チェックの目的',items:[
+    {h:'なぜこころのチェックが大切か',b:'<p>治療中の不安・抑うつは非常によくあることです。患者自身は「落ちていること」に気づきにくいため、定期的な確認が重要です。</p><p>「気持ちの問題」と思わずに、きちんと対処することが回復の助けになります。</p>'},
+  ]},
+  {h:'こころの状態チェック（5問）',items:[
+    {h:'Q1：気分が落ち込む・希望が持てない',b:'<p>この2週間、気分が落ち込んだり、希望が持てないと感じることがありましたか？</p><ul><li>まったくない → 良い状態です</li><li>数日間 → 経過観察を続けてください</li><li>半分以上・ほぼ毎日 → 担当医や心理士への相談を検討してください</li></ul>'},
+    {h:'Q2：物事への興味・関心がなくなった',b:'<p>物事に対してほとんど興味・関心がなくなっていると感じましたか？</p><ul><li>感じない → 良い状態です</li><li>少し感じる → 一人で抱え込まないようにしましょう</li><li>かなり感じる・ほぼ毎日 → 専門家への相談をお勧めします</li></ul>'},
+    {h:'Q3：治療への強い不安・恐怖',b:'<p>治療のことを考えると、強い不安や恐怖を感じますか？</p><ul><li>感じない → 良い状態です</li><li>少し感じる → 自然なことです。誰かに話してみましょう</li><li>かなり感じる・毎日 → がん相談支援センターや心理士への相談を</li></ul>'},
+    {h:'Q4：眠れない・夜中に目が覚める',b:'<p>夜、眠れない・何度も目が覚めることがありますか？</p><ul><li>ない → 良い状態です</li><li>週に1〜2回 → 休息を意識的に取りましょう</li><li>ほぼ毎日・毎日かなりつらい → 担当医に相談してください</li></ul>'},
+    {h:'Q5：誰かに気持ちを打ち明けられている',b:'<p>誰かに気持ちを打ち明けられていますか？</p><ul><li>できている → その関係を大切にしてください</li><li>あまりできていない → 話せる場所を一つ探しましょう</li><li>ほとんど・誰にも話せていない → 下の相談先をご利用ください</li></ul>',links:[{ic:'🤝',t:'マギーズ東京',d:'感情的サポート・予約不要・無料',u:'https://maggiestokyo.org/'},{ic:'🏛️',t:'がん相談支援センターを探す',d:'全国無料・話がまとまっていなくても大丈夫',u:'https://hospdb.ganjoho.jp/kyoten/kyotenlist'},{ic:'👩‍⚕️',t:'がんライフ・ナビゲーターにLINE相談',d:'気持ちのことも相談できます',u:'https://lin.ee/fPTqi76',line:true}]},
+  ]},
+  {h:'担当医への伝え方',items:[
+    {h:'気持ちのつらさを伝えるとき',b:'<p>「先生、少しよろしいでしょうか。最近、気分が落ち込んだり、不安が強くなっていることがあります。心理的なサポートを受けられる方法があれば相談したいのですが、どうすればいいか教えていただけますか？」</p><p>「精神科に行くほどではない」と思わなくていいです。がん拠点病院には心理士・精神科リエゾンがいる場合があります。</p>'},
+  ]},
+]},
+
+return:{t:'復帰準備チェック',sections:[
+  {h:'復帰前に確認すること',items:[
+    {h:'「体がOK」と「心がOK」は別',b:'<p>医師が「復帰できる」と判断するのは主に身体の回復です。<strong>心の回復は専門外です。</strong></p><p>「医者がOKと言ったから大丈夫」が通用しないことがあります。</p><p>傷病手当金が終わるタイミングで焦って復帰すると、再休職のリスクが高まります。</p>'},
+    {h:'体の準備チェック',b:'<p>以下を確認してください：</p>',checks:['主治医から就労許可の見通しを聞いた','副作用・後遺症の状況を担当医に伝えた','通院スケジュールと仕事の両立を検討した','体力・持続力が徐々に戻っている']},
+    {h:'心の準備チェック',b:'<p>以下を確認してください：</p>',checks:['気力・集中力が戻ってきたと感じる','人と話すことが負担でなくなってきた','再発の不安が仕事への意欲を上回っていない','自分のペースで生活できている']},
+  ]},
+  {h:'職場との準備',items:[
+    {h:'段階的復帰プランを立てる',b:'<p>いきなり以前と同じ仕事量に戻ろうとしないでください。</p><ul><li>試し出勤（リハビリ出勤）から始める</li><li>時短勤務・週3〜4日から徐々に増やす</li><li>定期的に上司と状態を確認する面談を設ける</li></ul>'},
+    {h:'人事・産業保健スタッフへの相談',b:'<p>産業医・産業看護師がいる職場では、復帰前に面談することをお勧めします。</p><ul><li>「段階的復帰プランを一緒に考えたい」と伝える</li><li>配慮が必要な点（通院日・体力など）を具体的に伝える</li><li>再休職にならないよう、無理のない計画を立てる</li></ul>',links:[{ic:'👩‍⚕️',t:'がんライフ・ナビゲーターにLINE相談',d:'復帰タイミング・職場との調整を一緒に考えます',u:'https://lin.ee/fPTqi76',line:true}]},
+  ]},
+]},
+
+recovery:{t:'心と体の回復チェック',sections:[
+  {h:'4つの視点で確認する',items:[
+    {h:'なぜ定期的なチェックが必要か',b:'<p>治療が終わっても、回復の状態は人それぞれです。体・心・生活・仕事の4つの視点で定期的に自分の状態を確認することが大切です。</p><p>「まだ回復していない」と感じることは弱さではなく、正直な状態です。</p>'},
+  ]},
+  {h:'①体の回復',items:[
+    {h:'体の状態チェック',b:'<p>以下の状態を確認してください：</p>',checks:['疲れやすさが治療前と比べて改善してきた','食欲・食事量が戻ってきた','睡眠が取れるようになってきた','副作用・後遺症の状況を担当医に定期報告している']},
+    {h:'体の回復で気をつけること',b:'<ul><li>「元気そうに見える」と「回復している」は違います</li><li>体力の回復は治療終了から数ヶ月〜1年以上かかることがあります</li><li>無理をすると回復が遅れることがあります</li><li>再発の不安があれば担当医に相談してください</li></ul>'},
+  ]},
+  {h:'②心の回復',items:[
+    {h:'心の状態チェック',b:'<p>以下の状態を確認してください：</p>',checks:['日常的な楽しみを感じる瞬間が増えた','気力・意欲が少しずつ戻ってきた','再発への不安と上手につきあえるようになった','誰かに気持ちを話せる関係がある']},
+    {h:'心の回復で気をつけること',b:'<ul><li>心の回復は体の回復より時間がかかることが多い</li><li>「もう大丈夫なはず」と思っているのに落ち込む日が続く場合は要注意</li><li>がん経験者の患者会・ピアサポートも活用できます</li></ul>',links:[{ic:'🤝',t:'マギーズ東京',d:'感情的サポート・予約不要',u:'https://maggiestokyo.org/'},{ic:'🤝',t:'キャンサーネットジャパン',d:'患者会の紹介・ピアサポート仲介',u:'https://www.cancernet.jp/'}]},
+  ]},
+  {h:'③生活の回復',items:[
+    {h:'生活の状態チェック',b:'<p>以下の状態を確認してください：</p>',checks:['家事・日常生活が自分のペースでできている','外出・外食など社会的な活動が少しずつできている','医療費・保険・制度の手続きが整理できた','通院スケジュールが生活に組み込めている']},
+  ]},
+  {h:'④仕事・社会復帰',items:[
+    {h:'仕事の回復チェック',b:'<p>以下の状態を確認してください：</p>',checks:['集中力が仕事に支障がないレベルまで戻ってきた','職場の理解・配慮を受けながら働けている','無理なく続けられる働き方になっている','復帰後に再休職していない'],links:[{ic:'👩‍⚕️',t:'がんライフ・ナビゲーターにLINE相談',d:'現状を一緒に整理します',u:'https://lin.ee/fPTqi76',line:true}]},
+  ]},
+]},
+
+support:{t:'相談・ダウンロード',sections:[
+  {h:'相談窓口',items:[
+    {h:'がん相談支援センター（全国無料）',b:'<p>全国400以上の無料相談窓口です。治療のこと、お金のこと、仕事のこと、何でも相談できます。話がまとまっていなくても大丈夫です。</p>',links:[{ic:'🏛️',t:'がん相談支援センターを探す',d:'国立がん研究センター公式',u:'https://hospdb.ganjoho.jp/kyoten/kyotenlist'}]},
+    {h:'マギーズ東京（感情的サポート）',b:'<p>予約不要・無料。感情的サポートを中心に看護師・心理士が在中。患者だけでなく家族・友人も相談できます。</p>',links:[{ic:'🤝',t:'マギーズ東京',d:'予約不要・無料',u:'https://maggiestokyo.org/'}]},
+    {h:'がんライフ・ナビゲーターに相談',b:'<p>アピアランスケア・保険・制度について直接対応します。必要に応じて提携クリニック・看護師へつなぎます。24時間以内に返信。</p>',links:[{ic:'👩‍⚕️',t:'がんライフ・ナビゲーターにLINE相談',d:'24時間以内に返信します',u:'https://lin.ee/fPTqi76',line:true}]},
+    {h:'社会保険労務士・専門家相談',b:'<p>傷病手当金・障害年金・就労継続など複雑な案件は社労士へ相談できます。</p>',links:[{ic:'⚖️',t:'全国社会保険労務士連合会',d:'傷病手当金・障害年金など',u:'https://www.sharoushi.or.jp/'}]},
+  ]},
+  {h:'ダウンロード・リンク',items:[
+    {h:'よく使うリンク一覧',b:'<ul><li>国立がん研究センター がん情報サービス → ganjoho.jp</li><li>協会けんぽ（高額療養費・傷病手当金）→ kyoukaikenpo.or.jp</li><li>ウィッグ助成金 自治体一覧（JHD&C）→ jhdac.org</li><li>訪問看護ステーション検索 → jvnf.or.jp</li></ul>',links:[{ic:'🏛️',t:'国立がん研究センター がん情報サービス',d:'がんの種類・治療・制度まで網羅',u:'https://ganjoho.jp/'},{ic:'📋',t:'ウィッグ助成金 自治体一覧',d:'購入前に必ずご確認を',u:'https://www.jhdac.org/local_goverment/'}]},
+    {h:'このアプリを共有する',b:'<p>がんと診断された方やそのご家族に、このページを共有してください。</p><p>URL：https://kunkun3793-dev.github.io/gan-concierge/</p>'},
+  ]},
+]},
+
+
+tell:{t:'大切な人への伝え方',sections:[
+  {h:'はじめに',items:[
+    {h:'伝える前に知っておいてほしいこと',b:`<p>がんになると、家族には心配をかけたくなくて、本心を言えなくなる時期があります。</p><p>「つらい」と言えば相手が落ち込む。「怖い」と言えば不安にさせてしまう。だから「大丈夫」と言い続けてしまう。</p><p>そんな時、友人や知人が特別な存在になります。</p><p><strong>「甘えること」は弱さではありません。</strong>気持ちを誰かに言える練習が、あなた自身を支える力になります。</p><p>まず一人だけでいい。「今しんどい」と言える相手を、見つけておいてください。</p>`,checks:[],links:[]},
+  ]},
+  {h:'配偶者・パートナーへ',items:[
+    {h:'伝える前に知っておいてほしいこと',b:`<p>完璧に説明できなくていい。相手の反応に傷ついてもおかしくない。一度で全部伝えなくていい。</p>`,checks:[],links:[]},
+    {h:'伝え方のヒント',b:`<p>「話したいことがある」と時間を作る。まず事実だけ伝える。「一緒に考えてほしい」と伝える。</p>`,checks:[],links:[]},
+    {h:'相手の反応への対処',b:`<p><ul><li>取り乱した時：「あなたの気持ちも聞かせて」</li><li>沈黙の時：そのまま待つ</li><li>「大丈夫」と言われた時：「大丈夫じゃないこともある」と正直に</li></ul></p>`,checks:[],links:[]},
+    {h:'本音を言えなくなる時期について',b:`<p>がんになると、パートナーに心配をかけたくなくて、かえって本音を言えなくなる時期があります。</p><p>「大丈夫」と言い続けてしまう。そんな時こそ、<strong>少しだけ甘えてみてください。</strong></p><p>「今日しんどい」のひと言だけでいい。ただそばにいてもらうだけで、気持ちが少し楽になることがあります。甘えることは、弱さではありません。</p>`,checks:[],links:[]},
+  ]},
+  {h:'子どもへ（13歳以下）',items:[
+    {h:'伝える前に知っておいてほしいこと',b:`<p>子どもは正直に伝えてもらう方が安心する。隠すと、子どもは敏感に気づいて一人で不安を抱える。完璧な言葉を探さなくていい。ゆっくり、少しずつでいい。</p>`,checks:[],links:[]},
+    {h:'伝え方のヒント',b:`<p>落ち着いた場所・時間を選ぶ（寝る前は避ける）。「がん」という言葉を使っていい。「あなたのせいじゃない」と最初に伝える。「治療を受けている」「先生に任せている」と安心できる言葉を添える。</p>`,checks:[],links:[]},
+    {h:'子どもがよく聞くこと',b:`<p>「死んじゃうの？」→「今、治療を頑張っている。先生に任せているよ」<br>「自分のせい？」→「全然違う。あなたは何も悪くない」<br>学校に行くのが辛くなることがある。急に赤ちゃん返りしたり、反抗的になることがある。</p>`,checks:[],links:[]},
+  ]},
+  {h:'子どもへ（14歳以上）',items:[
+    {h:'起きやすいこと',b:`<p>集中力がなくなる・感情の起伏が激しくなりやすい。友達に言えない孤独感を抱える。学校に行くのが辛くなる・分離不安。不安が体のサインとして現れることがある。</p>`,checks:[],links:[]},
+    {h:'受験生・塾・習い事について',b:`<p>受験生は「勉強していいのか」と罪悪感を抱えやすい。塾・習い事の送り迎えがなくなることへの不安。「家のために存在しなければ」と感じるプレッシャー。部活などが続けられるかの不安。</p><p><strong>「普通にしていていい」と繰り返し伝えてください。受験・塾・習い事は続けていいと明言することが大切です。</strong></p>`,checks:[],links:[]},
+    {h:'伝え方のヒント',b:`<p>二人きりの時間を作って話す。「がん」という言葉を正直に使う。「学校のことは今まで通りでいい」と伝える。「何でも聞いていい」「知りたくないことは聞かなくていい」の両方を伝える。</p>`,checks:[],links:[]},
+  ]},
+  {h:'ひとり親の場合',items:[
+    {h:'診断直後から早めに動くことが重要',b:`<p>治療が始まると、送り迎え・食事・学校行事など、一人でこなしてきたことが難しくなる日が必ず来ます。たらい回しになりやすいので、<strong>診断直後から早めに動くことが重要です。</strong></p>`,checks:['ファミリーサポートセンターに登録した（治療開始前に）','子どもの担任の先生に状況を伝えた','副作用がひどい日の食事・送迎の代替手段を決めた'],links:[{ic:'🏛️',t:'ファミリーサポートセンター検索',d:'全国センター検索（WAM）',u:'https://www.wam.go.jp/content/wamnet/pcpub/jidou/raisingkids/raisingkids444_new.html'},{ic:'🤝',t:'NPO法人 Hope Tree',d:'親ががんになった子どもを専門支援',u:'https://hope-tree.jp'},{ic:'🏛️',t:'ひとり親家庭サポート団体全国協議会',d:'全国のひとり親支援団体情報',u:'https://jspf.jp'}]},
+  ]},
+  {h:'親への伝え方',items:[
+    {h:'伝える前に知っておいてほしいこと',b:`<p>親は「代われるなら代わりたい」という気持ちが強くなりやすい。その思いが、あなたには「重い」「苦しい」と届くことがある。心配をかけたくないという気持ちは自然だが、隠すと後で混乱が大きくなる。</p>`,checks:[],links:[]},
+    {h:'口止めされたら',b:`<p>親世代には「病気は隠すもの」「弱さを見せてはいけない」という価値観が残っていることがあります。</p><p><strong>悪気はありません。あなたを傷つけようとしているわけではありません。</strong></p><p>でもあなたにとって、この言葉は深く傷つくことがあります。気にしすぎなくて大丈夫です。ただ一点だけ心に留めておいてください。<strong>誰に話すかは、あなたが決めること</strong>——その一点だけは大切にしてほしいのです。</p>`,checks:[],links:[]},
+    {h:'高齢の親・遠方の親へ',b:`<p><strong>高齢の場合：</strong>無理に全部を理解してもらおうとしない。「治療を受けている」「先生に任せている」それだけわかっていれば十分。あなた自身が元気でいることが子どもの安心につながると伝える。</p><p><strong>遠方の場合：</strong>電話よりビデオ通話の方が表情が伝わる。「すぐ来なくていい」と最初に伝える。「行ってもいい？」と一度確認してから動いてもらうとお互いの負担が減る。</p>`,checks:[],links:[]},
+  ]},
+  {h:'職場への伝え方',items:[
+    {h:'甘える選択をしていい',b:`<p>気を遣って頑張りすぎてしまう人ほど、職場では「大丈夫そう」に見えます。でも、ずっと気を張り続けることは、治療中の体には大きな負担になります。</p><p><strong>甘えることは、逃げることではありません。</strong>助けを受け取ることで、治療に集中できる。無理をしないことで、長く働き続けられる。</p>`,checks:[],links:[]},
+    {h:'何をどこまで伝えるか',b:`<p>まず直属の上司または人事に伝えるのが基本。病名・治療内容・予後まで伝える義務はない。「治療が必要な病気のため、通院や体調管理が必要です」だけで十分。誰に、何を、どこまで伝えるかは、あなたが決めること。</p>`,checks:['直属の上司または人事に状況を報告した','配慮してほしいことを具体的に伝えた','休職制度・傷病手当金について人事に確認した'],links:[]},
+    {h:'過度な気遣いがしんどい時',b:`<p>「腫れ物扱いされているようで、かえってつらい」と感じる時は、上司に正直に伝えていい。</p><p><strong>「できる範囲で普通に仕事をしたいです。相談しながら調整できる環境が助かります」</strong></p><p>この一言で、職場の関わり方が変わることがあります。</p>`,checks:[],links:[]},
+  ]},
+  {h:'知人・友人への伝え方',items:[
+    {h:'友人に甘えることの大切さ',b:`<p>がんになると、家族には心配をかけたくなくて、かえって気を張ってしまうことがあります。そんな時、友人は特別な存在になります。</p><p><strong>「なんでも聞くよ」と言ってくれる友人がいたら、遠慮なく甘えていい。</strong>愚痴を聞いてもらうだけでいい。泣いてもいい。「怖い」と言えるだけでいい。</p><p>ただそこにいてもらえるだけで、心が安定します。その安定が、治療を続ける力になります。</p>`,checks:[],links:[]},
+    {h:'伝え方のヒント',b:`<p>全部説明しなくていい。「実は病気になって」だけで十分。LINEで伝えてもOK。「言わないでほしい」と伝えれば、守ってくれる友人がほとんど。「普通に接してほしい」と伝えると楽になる。</p>`,checks:[],links:[]},
+  ]},
+]},
+};
+
+var uid=0;
+function show(k){
+  var d=D[k];
+  var cat=k;
+  document.getElementById('dtitle').textContent=d.t;
+  var html='';
+  d.sections.forEach(function(sec){
+    var sid='a'+(uid++);
+    var subitems='';
+    sec.items.forEach(function(item){
+      var iid='s'+(uid++);
+      var stableKey=cat+'_'+sec.h+'_'+item.h;
+      var body='<div class="sc">'+item.b;
+      if(item.checks&&item.checks.length){
+        body+='<div class="cl">';
+        item.checks.forEach(function(c,ci){
+          var ck=checked[stableKey+'_'+ci]?'ck':'';
+          body+='<div class="ci '+ck+'" id="ci_'+iid+'_'+ci+'" onclick="toggleCheck(\''+iid+'\',\''+stableKey+'\','+ci+')">'
+            +'<div class="cb2"></div>'
+            +'<div class="ci-t">'+c+'</div>'
+            +'</div>';
+        });
+        body+='</div>';
+      }
+      if(item.links&&item.links.length){
+        body+='<div class="lk-wrap">';
+        item.links.forEach(function(l){
+          var cls=l.line?'lk lk-line':'lk';
+          body+='<a class="'+cls+'" href="'+l.u+'" target="_blank">'
+            +'<span class="li">'+l.ic+'</span>'
+            +'<div class="lbd"><div class="lt2">'+l.t+'</div><div class="ld">'+l.d+'</div></div>'
+            +'</a>';
+        });
+        body+='</div>';
+      }
+      body+='</div>';
+      subitems+='<div class="si" id="'+iid+'">'
+        +'<div class="sh" onclick="togs(\''+iid+'\')">'
+        +'<span>'+item.h+'</span>'
+        +'<i class="sico">+</i>'
+        +'</div>'
+        +'<div class="sb">'+body+'</div>'
+        +'</div>';
+    });
+    html+='<div class="ai" id="'+sid+'">'
+      +'<div class="ah" onclick="toga(\''+sid+'\')">'
+      +'<span>'+sec.h+'</span>'
+      +'<i class="aico">+</i>'
+      +'</div>'
+      +'<div class="ab"><div class="sl">'+subitems+'</div></div>'
+      +'</div>';
+  });
+  document.getElementById('al').innerHTML=html;
+  document.getElementById('gp').classList.remove('on');
+  document.getElementById('dp').classList.add('on');
+  document.getElementById('pa').scrollTop=0;
+  // スクリプトボックスを動的追加
+  setTimeout(function(){
+    document.querySelectorAll('.sh span').forEach(function(span){
+      var key=span.textContent.trim();
+      if(!SCRIPTS[key])return;
+      var si=span.closest('.si');
+      if(!si)return;
+      var sc=si.querySelector('.sc');
+      
+    });
+  },50);
+}
+
+function back(){
+  document.getElementById('dp').classList.remove('on');
+  document.getElementById('gp').classList.add('on');
+  document.getElementById('pa').scrollTop=0;
+}
+
+function toga(id){
+  var el=document.getElementById(id);
+  var was=el.classList.contains('on');
+  document.querySelectorAll('.ai').forEach(function(e){e.classList.remove('on');});
+  if(!was)el.classList.add('on');
+}
+
+function togs(id){
+  var el=document.getElementById(id);
+  el.classList.toggle('on');
+}
+
+function cpS(btn){
+  var text=btn.previousElementSibling.textContent;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      var orig=btn.textContent;
+      btn.textContent='✅ コピーしました';
+      setTimeout(function(){btn.textContent=orig;},2000);
+    });
+  }
+}
+
+
+var mhAnswers={};
+function selMH(el,q,a){
+  mhAnswers[q]=a;
+  var opts=el.parentNode.querySelectorAll('.mh-o');
+  opts.forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  try{localStorage.setItem('gan_mh',JSON.stringify(mhAnswers));}catch{}
+  if(Object.keys(mhAnswers).length>=5){
+    var score=Object.values(mhAnswers).reduce(function(s,v){return s+v;},0);
+    var res=document.getElementById('mh-result');
+    if(res){
+      res.style.display='block';
+      if(score<=3){
+        res.style.background='#e8f8f0';res.style.color='#1a7a5a';
+        res.innerHTML='<strong>今の状態：比較的安定しています</strong><br>引き続き無理せず過ごしてください。';
+      } else if(score<=7){
+        res.style.background='#fff8e8';res.style.color='#b85c00';
+        res.innerHTML='<strong>今の状態：少しサポートが必要かもしれません</strong><br>信頼できる人や担当医に気持ちを話してみましょう。';
+      } else {
+        res.style.background='#fff0f0';res.style.color='#7a2020';
+        res.innerHTML='<strong>今の状態：専門的なサポートをお勧めします</strong><br>担当医・看護師・がん相談支援センターにご相談ください。';
+      }
+    }
+  }
+}
+// 保存済みの回答を復元
+try{var saved=JSON.parse(localStorage.getItem('gan_mh')||'{}');if(Object.keys(saved).length)mhAnswers=saved;}catch{}
+
+function toggleCheck(iid,stableKey,ci){
+  var key=stableKey+'_'+ci;
+  checked[key]=!checked[key];
+  saveCheck(key,checked[key]);
+  var el=document.getElementById('ci_'+iid+'_'+ci);
+  if(el){
+    if(checked[key])el.classList.add('ck');
+    else el.classList.remove('ck');
+  }
+}
+</script>
+</body>
+</html>
