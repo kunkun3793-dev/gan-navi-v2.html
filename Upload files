@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>アピアランスケア チェック表</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#f5f5f5;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;font-size:15px;color:#222;min-height:100vh}
+.wrap{max-width:430px;margin:0 auto;padding:16px}
+
+/* タブ */
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:12px 8px;border:none;border-radius:10px;font-size:14px;font-family:inherit;font-weight:bold;cursor:pointer;transition:all 0.2s}
+.tab.active{background:#7fbdba;color:#fff}
+.tab:not(.active){background:#fff;color:#555;border:2px solid #ddd}
+
+/* カード */
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;display:none}
+.card.show{display:block}
+.card-title{font-size:13px;font-weight:bold;color:#7fbdba;margin-bottom:4px;letter-spacing:0.05em}
+.card-desc{font-size:12px;color:#888;margin-bottom:14px;line-height:1.6}
+
+/* 質問ブロック */
+.q-block{margin-bottom:16px}
+.q-label{font-size:13px;font-weight:bold;color:#222;margin-bottom:8px;line-height:1.5}
+.q-label span{color:#c43a08;font-size:11px;margin-left:4px}
+
+/* 選択ボタン */
+.btn-group{display:flex;flex-wrap:wrap;gap:8px}
+.opt{
+  padding:8px 14px;
+  border-radius:20px;
+  font-size:13px;
+  font-family:inherit;
+  cursor:pointer;
+  border:2px solid #ddd;
+  background:#f5f5f5;
+  color:#555;
+  transition:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+/* チェックボックス行 */
+.chk-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  background:#f8f8f8;
+  border-radius:10px;
+  border:2px solid #eee;
+  cursor:pointer;
+  margin-bottom:8px;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.chk-box{
+  width:24px;
+  height:24px;
+  min-width:24px;
+  border-radius:5px;
+  border:2px solid #ccc;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  font-weight:bold;
+  color:transparent;
+}
+.chk-text{font-size:13px;color:#333;line-height:1.5}
+
+/* 注意書き */
+.note{background:#fff8e1;border-left:4px solid #ffc107;border-radius:6px;padding:10px 12px;font-size:12px;color:#555;margin-top:8px;line-height:1.6}
+
+/* コピーボタン */
+.copy-btn{
+  display:block;
+  width:100%;
+  margin-top:16px;
+  padding:14px;
+  background:#7fbdba;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  font-size:14px;
+  font-family:inherit;
+  font-weight:bold;
+  cursor:pointer;
+  text-align:center;
+}
+
+/* リセットボタン */
+.reset-btn{
+  display:block;
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  background:#fff;
+  color:#888;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:13px;
+  font-family:inherit;
+  cursor:pointer;
+  text-align:center;
+}
+
+.toast{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#333;
+  color:#fff;
+  padding:12px 24px;
+  border-radius:20px;
+  font-size:14px;
+  opacity:0;
+  transition:opacity 0.3s;
+  pointer-events:none;
+  white-space:nowrap;
+  z-index:999;
+}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ヘッダー -->
+  <div style="text-align:center;padding:16px 0 12px;border-bottom:1px solid #eee;margin-bottom:16px;position:relative;">
+    <a href="./"  style="position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:13px;color:#7fbdba;text-decoration:none;padding:6px 0;">← 戻る</a>
+    <div style="font-size:11px;color:#7fbdba;font-weight:bold;letter-spacing:0.1em;margin-bottom:4px;">アピアランスケア</div>
+    <div style="font-size:17px;font-weight:bold;color:#222;">試着会チェック表</div>
+    <div style="font-size:11px;color:#999;margin-top:4px;">担当者に見せながら一緒に確認しましょう</div>
+  </div>
+
+  <!-- タブ -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('wig',this)">ウィッグ試着前</button>
+    <button class="tab" onclick="switchTab('breast',this)">乳房補整具</button>
+  </div>
+
+  <!-- ウィッグ -->
+  <div id="wig" class="card show">
+    <div class="card-title">ウィッグ試着前チェック表</div>
+    <div class="card-desc">担当者に見せながら一緒に選びましょう。タップで選択できます。</div>
+
+    <div class="q-block">
+      <div class="q-label">１．使用頻度は？<span>複数可</span></div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">毎日</button>
+        <button class="opt" onclick="toggle(this)">仕事（6時間以上）</button>
+        <button class="opt" onclick="toggle(this)">仕事（3時間〜）</button>
+        <button class="opt" onclick="toggle(this)">外出時（3時間未満）</button>
+        <button class="opt" onclick="toggle(this)">自宅</button>
+        <button class="opt" onclick="toggle(this)">たまに</button>
+        <button class="opt" onclick="toggle(this)">その他</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">２．優先ポイントは？<span>複数可</span></div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">軽さ</button>
+        <button class="opt" onclick="toggle(this)">自然さ</button>
+        <button class="opt" onclick="toggle(this)">着け心地</button>
+        <button class="opt" onclick="toggle(this)">蒸れにくい</button>
+        <button class="opt" onclick="toggle(this)">その他</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">３．生活スタイルは？<span>複数可</span></div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">長時間着用</button>
+        <button class="opt" onclick="toggle(this)">短時間</button>
+        <button class="opt" onclick="toggle(this)">夏場</button>
+        <button class="opt" onclick="toggle(this)">子どもと過ごす</button>
+        <button class="opt" onclick="toggle(this)">その他</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">４．試着時の確認ポイントは？<span>複数可</span></div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">締め付け</button>
+        <button class="opt" onclick="toggle(this)">ズレ</button>
+        <button class="opt" onclick="toggle(this)">重さ</button>
+        <button class="opt" onclick="toggle(this)">色</button>
+        <button class="opt" onclick="toggle(this)">長さ</button>
+        <button class="opt" onclick="toggle(this)">メンテナンス</button>
+        <button class="opt" onclick="toggle(this)">その他</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">５．価格の希望は？<span>複数可</span></div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">1万円未満</button>
+        <button class="opt" onclick="toggle(this)">3万円未満</button>
+        <button class="opt" onclick="toggle(this)">5万円未満</button>
+        <button class="opt" onclick="toggle(this)">5万円以上〜</button>
+        <button class="opt" onclick="toggle(this)">10万円以上〜</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">６．確認事項</div>
+      <div class="chk-row" onclick="toggleChk(this)">
+        <div class="chk-box">✓</div>
+        <div class="chk-text">助成金の確認ができた</div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:#888;line-height:2;margin-top:12px;padding:10px 12px;background:#f9f9f9;border-radius:8px;">試着会当日にスマホでこのページを開いて、担当者に見せる<br>スクリーンショットして画像として保存し、試着会に持参する</p>
+    <button class="reset-btn" onclick="resetTab('wig')">リセット</button>
+  </div>
+
+  <!-- 乳房補整具 -->
+  <div id="breast" class="card">
+    <div class="card-title">乳房補整具 選び方チェック表</div>
+    <div class="card-desc">担当者と一緒に確認しましょう。購入前に助成金を必ず確認してください。</div>
+
+    <div class="q-block">
+      <div class="q-label">１．手術の種類</div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">部分切除</button>
+        <button class="opt" onclick="toggle(this)">全切除</button>
+        <button class="opt" onclick="toggle(this)">わからない</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">２．確認事項</div>
+      <div class="chk-row" onclick="toggleChk(this)">
+        <div class="chk-box">✓</div>
+        <div class="chk-text">手術の種類に合わせた補整具の説明を聞いた</div>
+      </div>
+      <div class="chk-row" onclick="toggleChk(this)">
+        <div class="chk-box">✓</div>
+        <div class="chk-text">気になることを整理して確認した</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">３．優先ポイントは？<span>複数可</span></div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">軽さ</button>
+        <button class="opt" onclick="toggle(this)">重さ</button>
+        <button class="opt" onclick="toggle(this)">着け心地</button>
+        <button class="opt" onclick="toggle(this)">蒸れにくい</button>
+        <button class="opt" onclick="toggle(this)">その他</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">４．生活スタイルは？<span>複数可</span></div>
+      <div class="btn-group">
+        <button class="opt" onclick="toggle(this)">長時間着用</button>
+        <button class="opt" onclick="toggle(this)">短時間</button>
+        <button class="opt" onclick="toggle(this)">夏場</button>
+        <button class="opt" onclick="toggle(this)">子どもと過ごす</button>
+        <button class="opt" onclick="toggle(this)">その他</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">５．購入前の確認<span style="color:#c43a08">必須</span></div>
+      <div class="chk-row" onclick="toggleChk(this)">
+        <div class="chk-box">✓</div>
+        <div class="chk-text">自治体の胸部補整具助成金制度の説明を受けた</div>
+      </div>
+      <div class="chk-row" onclick="toggleChk(this)">
+        <div class="chk-box">✓</div>
+        <div class="chk-text">乳房補整具の価格を確認できた</div>
+      </div>
+    </div>
+
+    <div class="note">※ 補整パッドはズレやすいため、試着時に必ずズレの確認をしてください（特に外出時）</div>
+
+    <p style="font-size:12px;color:#888;line-height:2;margin-top:12px;padding:10px 12px;background:#f9f9f9;border-radius:8px;">試着会当日にスマホでこのページを開いて、担当者に見せる<br>スクリーンショットして画像として保存し、試着会に持参する</p>
+    <button class="reset-btn" onclick="resetTab('breast')">リセット</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">コピーしました！LINEやメモに貼れます</div>
+
+<script>
+// タブ切り替え
+function switchTab(id, el){
+  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('show')});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  document.getElementById(id).classList.add('show');
+  el.classList.add('active');
+}
+
+// 選択ボタン ON/OFF
+function toggle(el){
+  var on = el.getAttribute('data-on')==='1';
+  if(on){
+    el.setAttribute('data-on','0');
+    el.style.background='#f5f5f5';
+    el.style.borderColor='#ddd';
+    el.style.color='#555';
+    el.style.fontWeight='normal';
+  } else {
+    el.setAttribute('data-on','1');
+    el.style.background='#7fbdba';
+    el.style.borderColor='#5a9e9b';
+    el.style.color='#ffffff';
+    el.style.fontWeight='bold';
+  }
+}
+
+// チェックボックス ON/OFF
+function toggleChk(row){
+  var box = row.querySelector('.chk-box');
+  var on = row.getAttribute('data-on')==='1';
+  if(on){
+    row.setAttribute('data-on','0');
+    row.style.background='#f8f8f8';
+    row.style.borderColor='#eee';
+    box.style.background='#fff';
+    box.style.borderColor='#ccc';
+    box.style.color='transparent';
+  } else {
+    row.setAttribute('data-on','1');
+    row.style.background='#edf8f7';
+    row.style.borderColor='#7fbdba';
+    box.style.background='#7fbdba';
+    box.style.borderColor='#5a9e9b';
+    box.style.color='#ffffff';
+  }
+}
+
+// コピー
+function copyResult(tab){
+  var card = document.getElementById(tab);
+  var lines = [];
+
+  if(tab==='wig') lines.push('【ウィッグ試着前チェック表】');
+  else lines.push('【乳房補整具 選び方チェック表】');
+
+  // 選択されたボタンのみ
+  card.querySelectorAll('.q-block').forEach(function(block){
+    var label = block.querySelector('.q-label').textContent.trim();
+    var selected = [];
+
+    // data-on="1" のボタンだけ
+    block.querySelectorAll('.opt').forEach(function(b){
+      if(b.getAttribute('data-on')==='1'){
+        // ✓が付いている場合は除去してテキストだけ取得
+        var txt = b.textContent.replace(/^✓\s*/,'');
+        selected.push(txt);
+      }
+    });
+
+    // data-on="1" のチェックボックスだけ
+    block.querySelectorAll('.chk-row').forEach(function(r){
+      if(r.getAttribute('data-on')==='1'){
+        selected.push('✓ '+r.querySelector('.chk-text').textContent);
+      }
+    });
+
+    if(selected.length>0){
+      lines.push(label+'\n　'+selected.join('、'));
+    }
+  });
+
+  if(lines.length<=1){
+    lines.push('（まだ何も選択されていません）\n選択肢をタップしてから再度コピーしてください');
+  }
+
+  var text = lines.join('\n');
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position='fixed';ta.style.left='-9999px';
+  document.body.appendChild(ta);
+  ta.select();ta.setSelectionRange(0,99999);
+  try{
+    document.execCommand('copy');
+    showToast();
+  } catch(e) {
+    if(navigator.clipboard) navigator.clipboard.writeText(text).then(showToast);
+  }
+  document.body.removeChild(ta);
+}
+
+function showToast(){
+  var t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+// リセット
+function resetTab(tab){
+  var card = document.getElementById(tab);
+  card.querySelectorAll('.opt').forEach(function(el){
+    el.setAttribute('data-on','0');
+    el.style.background='#f5f5f5';
+    el.style.borderColor='#ddd';
+    el.style.color='#555';
+    el.style.fontWeight='normal';
+  });
+  card.querySelectorAll('.chk-row').forEach(function(row){
+    var box=row.querySelector('.chk-box');
+    row.setAttribute('data-on','0');
+    row.style.background='#f8f8f8';
+    row.style.borderColor='#eee';
+    box.style.background='#fff';
+    box.style.borderColor='#ccc';
+    box.style.color='transparent';
+  });
+}
+</script>
+</body>
+</html>
