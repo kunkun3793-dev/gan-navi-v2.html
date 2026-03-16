@@ -30,7 +30,7 @@ body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;col
 .grid{display:grid;grid-template-columns:1fr;gap:12px;padding:20px 16px;height:calc(100vh - 180px)}
 .cb{background:#7fbdba;border:none;border-radius:14px;cursor:pointer;width:100%;height:100%;min-height:72px;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
 .cb:active{transform:scale(0.98);background:#5fa09d}
-.cb span{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:20px;color:#000000;text-align:center;line-height:1.65;letter-spacing:0.08em;padding:8px}
+.cb span{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:20px;color:#ffffff;text-align:center;line-height:1.65;letter-spacing:0.08em;padding:8px}
 
 /* 詳細ページ */
 .bbtn{background:none;border:none;color:#000000;font-size:14px;cursor:pointer;padding:16px 16px 8px;display:flex;align-items:center;gap:4px}
@@ -189,6 +189,7 @@ body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;col
       <button class="cb" onclick="show('appearance')"><span>アピアランスケア</span></button>
       <button class="cb" onclick="show('support')"><span>申請・ダウンロード一覧</span></button>
       <button class="cb" onclick="show('tell')"><span>大切な人への伝え方</span></button>
+      <button class="cb" onclick="window.open('https://kunkun3793-dev.github.io/gan-family-guide/','_blank')"><span>大切な人が<br>がんになった時</span></button>
     </div>
   </div>
 
@@ -203,6 +204,7 @@ body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;col
 <div class="disclaimer">
   <p>本サービスの情報は参考情報であり、医療的判断の代替となるものではありません。治療や医療に関するご判断は、必ず主治医にご相談ください。</p>
   <p>参考：<a href="https://ganjoho.jp" target="_blank">国立がん研究センター がん情報サービス</a></p>
+  <p>このアプリを共有する：<a href="https://kunkun3793-dev.github.io/gan-navi-v2.html/" target="_blank">https://kunkun3793-dev.github.io/gan-navi-v2.html/</a></p>
 </div>
 
 <!-- ナビバー -->
@@ -243,7 +245,7 @@ steps:{t:'診断から回復まで',sections:[
     {h:'高額療養費制度の手続き',b:'<p>月の医療費が一定額を超えると払い戻しを受けられます。限度額適用認定証を事前に取得すれば窓口支払い自体を抑えられます。</p>',checks:['加入している健康保険の種類を確認した','限度額適用認定証の申請をした','自己負担限度額（所得区分）を確認した'],links:[{ic:'🏛️',t:'高額療養費制度（厚生労働省）',d:'制度詳細・限度額一覧',u:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html'}]},
     {h:'職場への報告と就労継続の検討',b:'<p>「治療しながら働く」ことは今や一般的です。いきなり退職しないでください。休職制度・傷病手当金の活用を確認しましょう。</p>',checks:['直属の上司または人事に状況を報告した','就業規則で休職制度を確認した','社会保険労務士への相談を検討した'],links:[]},
     {h:'傷病手当金の申請準備',b:'<p>会社員・公務員が対象。連続4日以上休業で、給与の約2/3が最長1年6ヶ月支給されます。</p>',checks:['対象かどうか確認した（社保加入者が対象）','申請書類を健保組合から取り寄せた','支給期間・金額の目安を計算した'],links:[{ic:'🏛️',t:'傷病手当金（協会けんぽ）',d:'申請書ダウンロードも可',u:'https://www.kyoukaikenpo.or.jp/g3/cat315/sb3040/r139/'}]},
-    {h:'訪問看護・在宅サービスの申請',b:'<p>「まだ大丈夫」と思っていても、副作用はいつ出るかわかりません。<strong>「必要ですか？」ではなく「申請したいので指示書をお願いします」と伝えることが重要です。</strong></p>',checks:['主治医に「訪問看護の指示書をお願いします」と伝えた','訪問看護ステーションに連絡した'],links:[{ic:'🏛️',t:'訪問看護ステーション検索',d:'公益財団法人日本訪問看護財団',u:'https://www.jvnf.or.jp/home/station-search'}]},
+    {h:'訪問看護・在宅サービスの申請',b:'<p>「まだ大丈夫」と思っていても、副作用はいつ出るかわかりません。申し込みから利用開始まで<strong>約1ヶ月かかります。副作用が出てから動いても間に合わないことがあります。</strong>治療が決まった今、動いてください。</p><div style="margin-top:12px;background:rgba(255,255,255,0.7);border-radius:8px;padding:12px 14px;"><div style="font-size:12px;font-weight:700;color:#1a5c5a;margin-bottom:8px;">相談方法・このまま使える言葉</div><div style="margin-bottom:10px;"><div style="font-size:11px;color:#555;margin-bottom:4px;">主治医へ：</div><div style="font-size:13px;color:#000;line-height:1.8;background:#fff;border-radius:6px;padding:8px 10px;border:1px solid #ddd;">「抗がん剤の副作用が心配なので、訪問看護の申請を考えています。指示書をお願いできますか？」</div></div><div><div style="font-size:11px;color:#555;margin-bottom:4px;">がん相談支援センターへ：</div><div style="font-size:13px;color:#000;line-height:1.8;background:#fff;border-radius:6px;padding:8px 10px;border:1px solid #ddd;">「抗がん剤が始まります。副作用が心配なので、訪問看護の申請について一緒に考えていただけますか？」</div></div></div>',checks:['主治医に「訪問看護の指示書をお願いします」と伝えた','訪問看護ステーションに連絡した'],links:[{ic:'🏛️',t:'訪問看護ステーション検索',d:'公益財団法人日本訪問看護財団',u:'https://www.jvnf.or.jp/home/station-search'}]},
 
   ]},
   {h:'🟠 治療中',items:[
@@ -326,16 +328,58 @@ recovery:{t:'心と体の回復チェック',sections:[
   ]},
 ]},
 
-support:{t:'相談・ダウンロード',sections:[
+support:{t:'申請・ダウンロード一覧',sections:[
   {h:'相談窓口',items:[
     {h:'がん相談支援センター（全国無料）',b:'<p>全国400以上の無料相談窓口です。治療のこと、お金のこと、仕事のこと、何でも相談できます。話がまとまっていなくても大丈夫です。</p>',links:[{ic:'🏛️',t:'がん相談支援センターを探す',d:'国立がん研究センター公式',u:'https://hospdb.ganjoho.jp/kyoten/kyotenlist'}]},
     {h:'マギーズ東京（感情的サポート）',b:'<p>予約不要・無料。感情的サポートを中心に看護師・心理士が在中。患者だけでなく家族・友人も相談できます。</p>',links:[{ic:'🤝',t:'マギーズ東京',d:'予約不要・無料',u:'https://maggiestokyo.org/'}]},
     {h:'がんライフ・ナビゲーターに相談',b:'<p>アピアランスケア・保険・制度について直接対応します。必要に応じて提携クリニック・看護師へつなぎます。24時間以内に返信。</p>',links:[{ic:'👩‍⚕️',t:'がんライフ・ナビゲーターにLINE相談',d:'24時間以内に返信します',u:'https://lin.ee/fPTqi76',line:true}]},
     {h:'社会保険労務士・専門家相談',b:'<p>傷病手当金・障害年金・就労継続など複雑な案件は社労士へ相談できます。</p>',links:[{ic:'⚖️',t:'全国社会保険労務士連合会',d:'傷病手当金・障害年金など',u:'https://www.sharoushi.or.jp/'}]},
   ]},
-  {h:'ダウンロード・リンク',items:[
-    {h:'よく使うリンク一覧',b:'<ul><li>国立がん研究センター がん情報サービス → ganjoho.jp</li><li>協会けんぽ（高額療養費・傷病手当金）→ kyoukaikenpo.or.jp</li><li>ウィッグ助成金 自治体一覧（JHD&C）→ jhdac.org</li><li>訪問看護ステーション検索 → jvnf.or.jp</li></ul>',links:[{ic:'🏛️',t:'国立がん研究センター がん情報サービス',d:'がんの種類・治療・制度まで網羅',u:'https://ganjoho.jp/'},{ic:'📋',t:'ウィッグ助成金 自治体一覧',d:'購入前に必ずご確認を',u:'https://www.jhdac.org/local_goverment/'}]},
-    {h:'このアプリを共有する',b:'<p>がんと診断された方やそのご家族に、このページを共有してください。</p><p>URL：https://kunkun3793-dev.github.io/gan-concierge/</p>'},
+  {h:'保険の種類別　申請先早見表',items:[
+    {h:'自分の保険はどれ？申請先はここ',b:'<div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;"><div style="background:#e8f4f8;border-left:4px solid #3b8ec4;border-radius:8px;padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#1a5a80;margin-bottom:6px;">🏢 会社員・公務員（社会保険）</div><div style="font-size:12px;color:#333;line-height:1.8;"><b>高額療養費</b>　→　勤務先の健康保険組合 または 協会けんぽ<br><b>傷病手当金</b>　→　勤務先の健康保険組合 または 協会けんぽ<br><b>限度額認定証</b>　→　同上（事前申請が必要）</div></div><div style="background:#f0f7ee;border-left:4px solid #4a9a5c;border-radius:8px;padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#2a6a3a;margin-bottom:6px;">🏠 自営業・フリーランス（国民健康保険）</div><div style="font-size:12px;color:#333;line-height:1.8;"><b>高額療養費</b>　→　お住まいの市区町村窓口<br><b>傷病手当金</b>　→　<span style="color:#c43a08;font-weight:700;">原則対象外</span>（一部自治体で独自制度あり）<br><b>限度額認定証</b>　→　市区町村窓口（事前申請が必要）</div></div><div style="background:#fdf4e8;border-left:4px solid #c47a1a;border-radius:8px;padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#8a5010;margin-bottom:6px;">👴 75歳以上（後期高齢者医療制度）</div><div style="font-size:12px;color:#333;line-height:1.8;"><b>高額療養費</b>　→　後期高齢者医療広域連合 または 市区町村<br><b>傷病手当金</b>　→　<span style="color:#c43a08;font-weight:700;">対象外</span><br><b>限度額認定証</b>　→　市区町村窓口</div></div><div style="background:#f5f0f8;border-left:4px solid #7a5aa0;border-radius:8px;padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#5a3a80;margin-bottom:6px;">📋 わからない場合</div><div style="font-size:12px;color:#333;line-height:1.8;">健康保険証の発行元を確認してください。<br>または、がん相談支援センターに聞くと一緒に整理してもらえます。</div></div></div>'},
+  ]},
+  {h:'申請書ダウンロード',items:[
+    {h:'高額療養費・限度額認定証',b:'<p>窓口での支払いを抑えるために、<strong>治療開始前に限度額適用認定証を取得</strong>しておくことをお勧めします。</p>',links:[
+      {ic:'📄',t:'限度額適用認定証 申請書（協会けんぽ）',d:'印刷して勤務先の健保・協会けんぽへ提出',u:'https://www.kyoukaikenpo.or.jp/g3/cat310/sb3020/r151/'},
+      {ic:'🏛️',t:'高額療養費制度の詳細（厚生労働省）',d:'自己負担限度額の一覧・制度説明',u:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html'},
+    ]},
+    {h:'傷病手当金',b:'<p>会社員・公務員が対象。連続4日以上休業で給与の約2/3が最長1年6ヶ月支給されます。<strong>申請書は医師・会社の記入欄あり。</strong></p>',links:[
+      {ic:'📄',t:'傷病手当金 申請書（協会けんぽ）',d:'申請書ダウンロード・記入例あり',u:'https://www.kyoukaikenpo.or.jp/g3/cat315/sb3040/r139/'},
+    ]},
+    {h:'障害年金',b:'<p>がんでも一定の条件を満たせば受給できます。社労士への相談をお勧めします。</p>',links:[
+      {ic:'🏛️',t:'障害年金（日本年金機構）',d:'手続き・申請書類の案内',u:'https://www.nenkin.go.jp/service/jukyu/shougainenkin/index.html'},
+    ]},
+  ]},
+  {h:'リンク・ダウンロード一覧',items:[
+    {h:'相談窓口',b:'<p>すべてクリックして直接アクセスできます。</p>',links:[
+      {ic:'🏛️',t:'がん相談支援センターを探す',d:'全国無料・何でも相談できます',u:'https://hospdb.ganjoho.jp/kyoten/kyotenlist'},
+      {ic:'🤝',t:'マギーズ東京',d:'感情的サポート・予約不要・無料',u:'https://maggiestokyo.org/'},
+      {ic:'🤝',t:'キャンサーネットジャパン',d:'患者会の紹介・ピアサポート仲介',u:'https://www.cancernet.jp/'},
+      {ic:'⚖️',t:'全国社会保険労務士連合会',d:'傷病手当金・障害年金など',u:'https://www.sharoushi.or.jp/'},
+      {ic:'👩‍⚕️',t:'がんライフ・ナビゲーターにLINE相談',d:'24時間以内に返信します',u:'https://lin.ee/fPTqi76',line:true},
+    ]},
+    {h:'申請・制度',b:'<p>申請書ダウンロードや制度の詳細はこちら。</p>',links:[
+      {ic:'🏛️',t:'高額療養費制度（厚生労働省）',d:'制度詳細・自己負担限度額一覧',u:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html'},
+      {ic:'📄',t:'限度額適用認定証 申請書（協会けんぽ）',d:'印刷して健保・協会けんぽへ提出',u:'https://www.kyoukaikenpo.or.jp/g3/cat310/sb3020/r151/'},
+      {ic:'📄',t:'傷病手当金 申請書（協会けんぽ）',d:'申請書ダウンロード・記入例あり',u:'https://www.kyoukaikenpo.or.jp/g3/cat315/sb3040/r139/'},
+      {ic:'🏛️',t:'障害年金（日本年金機構）',d:'手続き・申請書類の案内',u:'https://www.nenkin.go.jp/service/jukyu/shougainenkin/index.html'},
+      {ic:'🏛️',t:'セカンドオピニオン外来を探す',d:'国立がん研究センター',u:'https://ganjoho.jp/public/dia_tre/2nd_opinion/index.html'},
+      {ic:'🏠',t:'訪問看護ステーション検索',d:'公益財団法人日本訪問看護財団',u:'https://www.jvnf.or.jp/home/station-search'},
+    ]},
+    {h:'アピアランスケア',b:'<p>ウィッグ・補整具の助成金は自治体ごとに異なります。まず自分の自治体を検索してください。</p>',links:[
+      {ic:'📋',t:'ウィッグ試着前チェック表（試着会に持参）',d:'担当者に見せながら一緒に確認できます',u:'https://magnificent-bus-946.notion.site/324583cddfe881ff8390f27124ff519f'},
+      {ic:'📋',t:'乳房補整具 選び方チェック表（試着会に持参）',d:'担当者に見せながら一緒に確認できます',u:'https://magnificent-bus-946.notion.site/324583cddfe8818896f7d9e22814b189'},
+      {ic:'📋',t:'ウィッグ助成金 自治体一覧（JHD&C）',d:'自分の自治体を検索→各自治体ページから申請書をダウンロード（購入前に！）',u:'https://www.jhdac.org/local_goverment/'},
+      {ic:'📋',t:'乳房補整具 助成金 自治体一覧（JHD&C）',d:'自分の自治体を検索→各自治体ページから申請書をダウンロード（購入前に！）',u:'https://www.jhdac.org/local_goverment_breast/'},
+      {ic:'🏥',t:'アピアランスケア外来（国立がん研究センター）',d:'外見の変化に対応する専門外来',u:'https://ganjoho.jp/public/support/appearance/index.html'},
+    ]},
+    {h:'ペット',b:'<p>ペットのいる方向け。</p>',links:[
+      {ic:'🐾',t:'日本動物愛護協会',d:'ペットの預かり・相談窓口あり',u:'https://jspca.or.jp/'},
+    ]},
+    {h:'情報収集',b:'<p>制度・治療・生活情報の総合サイト。</p>',links:[
+      {ic:'🏛️',t:'国立がん研究センター がん情報サービス',d:'がんの種類・治療・制度まで網羅',u:'https://ganjoho.jp/'},
+    ]},
+
   ]},
 ]},
 
